@@ -10,7 +10,7 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #include <ResponsiveAnalogRead.h>
-Adafruit_ADS1115 ads; 
+Adafruit_ADS1115 ads;
 ResponsiveAnalogRead analog(0, true);
 
 
@@ -37,21 +37,22 @@ ResponsiveAnalogRead analog(0, true);
 #define Is_Status               0x19
 #define Is_Config               0x1a
 
-char rxCommand = 0;        //  holds the received command.
-//  Variables
+char rxCommand = 0;      
 char InputBuffer[256];                          //Input buffer from RS232,
 char OutputBuffer[256];                         //Output buffer to RS232,
+char buffer[256];
+char receivedChar;
+
 unsigned char InBfTopPointer, InBfBtmPointer;   //input buffer pointers
 unsigned char OutBfTopPointer, OutBfBtmPointer; //output buffer pointers
 unsigned char Read_Package_Buffer[8], Read_Num, Read_Package_Length, Global_Func;
 unsigned char MotorPosition32Ready_Flag, MotorTorqueCurrentReady_Flag, MainGainRead_Flag;
 unsigned char Driver_MainGain, Driver_SpeedGain, Driver_IntGain, Driver_TrqCons, Driver_HighSpeed, Driver_HighAccel, Driver_ReadID, Driver_Status, Driver_Config, Driver_OnRange;
 long Motor_Pos32, MotorTorqueCurrent;
-int16_t sensor, c, i,sensor_i;
+int16_t sensor, c, i, sensor_i;
 int16_t results;
 float multiplier = 0.0078125F;
 int16_t reading;
-char buffer[256];
 String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 int inChar = 0;
@@ -71,10 +72,13 @@ void Send_Package(char ID , long Displacement);
 void Make_CRC_Send(unsigned char Plength, unsigned char B[8]);
 void door(void);
 /**/
-char receivedChar;
 boolean newData = false;
 int force = 0;
 int m_distance = 10;
+int paso=0;
+int t=0;
+int32_t steps=0;
+int32_t finish;
 
 void setup()
 {
@@ -82,27 +86,22 @@ void setup()
   Serial3.begin(38400);        // Servo drive connected to Serial3
   c = 0;
   i = 0;
-  sensor=0;
-  sensor_i=0;
+  sensor = 0;
+  sensor_i = 0;
   move_abs32(0, 0);
-  move_abs32(1, 0); 
+  move_abs32(1, 0);
+  
   ads.setGain(GAIN_SIXTEEN);    // 16x gain  +/- 0.256V  1 bit = 0.125mV  0.0078125mV
   ads.begin();
-  float snapmultiplier=0.9;
-  void setSnapMultiplier(float snapmultiplier);
-  float newThreshold=1.0;
-  void setActivityThreshold(float newThreshold);
-  void enableEdgeSnap();
-  int resolution = 32768;
-  void setAnalogResolution(int resolution);
+  
   Serial.flush();       // Clear receive buffer.
   printHelp();          // Print the command list.
-  
-      for (i = 0; i < 1000; i++) {
-        reading = ads.readADC_Differential_0_1();
-        if (reading>0){analog.update(reading);}
-        sensor = analog.getValue();
-      }
+  for (i = 0; i < 1000; i++) {
+    reading = ads.readADC_Differential_0_1();
+    analog.update(reading);
+    sensor = analog.getValue();
+  }
+  sensor_i = analog.getValue();
 }
 
 void loop()
@@ -123,9 +122,10 @@ void loop()
       break;
     case 2:
       Serial.println("Searching surface");
-      while (sensor < 18) {
+      sensor_i=sensor_i+30;
+      while (sensor < sensor_i) {
         reading = ads.readADC_Differential_0_1();
-        if (reading>0){analog.update(reading);}
+        analog.update(reading);
         sensor = analog.getValue();
         Serial.println(sensor);
         move_rel32(0, -2000);
@@ -137,28 +137,31 @@ void loop()
       break;
     case 3:
       Serial.println("Preparing to Indent");
-      move_rel32(0, 13768);
+      move_rel32(0, 4096);
       delay(4000);
       c = 4;
       break;
     case 4:
       Serial.println("Indenting");
-      while (sensor < force) {
+      finish=int (163480/m_distance);
+      
+      while ((sensor < 1400)&&(steps < finish)) {
         reading = ads.readADC_Differential_0_1();
-        if (reading>0){analog.update(reading);}
+        analog.update(reading);
         sensor = analog.getValue();
         Serial.println(sensor);
-        move_rel32(0, -1);
+        move_rel32(0, paso);
         move_rel32(1, m_distance);
-        delay(10);
-
+        delay(t);
+        steps=steps+1;
       }
+      
       move_rel32(0, 0);
       move_rel32(1, 0);
       // Turn_const_speed(0, 0);
       // Turn_const_speed(1, 0);
       c = 5;
-      
+
     case 5:
       Serial.println("retiring the edge");
       move_rel32(0, 1638400);
@@ -436,6 +439,10 @@ void printHelp(void) {
   Serial.println("3 -> three Kgm selection");
   Serial.println("4 -> four  Kgm selection");
   Serial.println("5 -> five  Kgm selection");
+  Serial.println("6 -> six   Kgm selection");
+  Serial.println("7 -> seven Kgm selection");
+  Serial.println("8 -> eight Kgm selection");
+
 }
 
 
@@ -463,8 +470,10 @@ void door(void) {
 
       case '1':
         if (c == 0) {
-          force = sensor_i+100;
+          force = sensor_i + 160+80;
+          paso=-2;
           m_distance = 40;
+          t=20;     
           Serial.println("1Kg choosen");
           c = 7;
         }
@@ -473,8 +482,10 @@ void door(void) {
 
       case '2':
         if (c == 0) {
-          force = sensor_i+200;
+          force = sensor_i + 320+80;
+          paso=-10;
           m_distance = 40;
+          t=20;
           Serial.println("2Kg choosen");
           c = 7;
         }
@@ -483,8 +494,10 @@ void door(void) {
 
       case '3':
         if (c == 0) {
-          force = sensor_i+300;
+          force = sensor_i + 480+80;
+          paso=-18;
           m_distance = 40;
+          t=20;
           Serial.println("3Kg choosen");
           c = 7;
         }
@@ -492,8 +505,10 @@ void door(void) {
         break;
       case '4':
         if (c == 0) {
-          force = sensor_i+400;
+          force = sensor_i + 640+80;
+          paso=-26;
           m_distance = 40;
+          t=20;
           Serial.println("4Kg choosen");
           c = 7;
         }
@@ -501,14 +516,48 @@ void door(void) {
         break;
       case '5':
         if (c == 0) {
-          force = sensor_i+500;
+          force = sensor_i + 800+80;
+          paso=-34;
           m_distance = 40;
+          t=20;
           Serial.println("5Kg choosen");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
-
+      case '6':
+        if (c == 0) {
+          force = sensor_i + 960+80;
+          paso=-42;
+          m_distance = 40;
+          t=20;
+          Serial.println("6Kg choosen");
+          c = 7;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+      case '7':
+        if (c == 0) {
+          force = sensor_i + 1120+80;
+          paso=-50;
+          m_distance = 40;
+          t=20;
+          Serial.println("7Kg choosen");
+          c = 7;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+      case '8':
+        if (c == 0) {
+          force = sensor_i + 1280+80;
+          paso=-58;
+          m_distance = 40;
+          t=20;
+          Serial.println("8Kg choosen");
+          c = 7;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
 
       case '?':                          // If received a ?:
         printHelp();                   // print the command list.
