@@ -37,7 +37,7 @@ ResponsiveAnalogRead analog(0, true);
 #define Is_Status               0x19
 #define Is_Config               0x1a
 
-char rxCommand = 0;      
+char rxCommand = 0;
 char InputBuffer[256];                          //Input buffer from RS232,
 char OutputBuffer[256];                         //Output buffer to RS232,
 char buffer[256];
@@ -75,9 +75,9 @@ void door(void);
 boolean newData = false;
 int force = 0;
 int m_distance = 10;
-int paso=0;
-int t=0;
-int32_t steps=0;
+int paso = 0;
+int t = 0;
+int32_t steps = 0;
 int32_t finish;
 
 void setup()
@@ -90,10 +90,10 @@ void setup()
   sensor_i = 0;
   move_abs32(0, 0);
   move_abs32(1, 0);
-  
+
   ads.setGain(GAIN_SIXTEEN);    // 16x gain  +/- 0.256V  1 bit = 0.125mV  0.0078125mV
   ads.begin();
-  
+
   Serial.flush();       // Clear receive buffer.
   printHelp();          // Print the command list.
   for (i = 0; i < 1000; i++) {
@@ -122,7 +122,7 @@ void loop()
       break;
     case 2:
       Serial.println("Searching surface");
-      sensor_i=sensor_i+30;
+      sensor_i = sensor_i + 30;
       while (sensor < sensor_i) {
         reading = ads.readADC_Differential_0_1();
         analog.update(reading);
@@ -143,9 +143,9 @@ void loop()
       break;
     case 4:
       Serial.println("Indenting");
-      finish=int (163480/m_distance);
-      
-      while ((sensor < 1400)&&(steps < finish)) {
+      finish = int (163480 / m_distance);
+
+      while ((sensor < 1400) && (steps < finish)) {
         reading = ads.readADC_Differential_0_1();
         analog.update(reading);
         sensor = analog.getValue();
@@ -153,9 +153,9 @@ void loop()
         move_rel32(0, paso);
         move_rel32(1, m_distance);
         delay(t);
-        steps=steps+1;
+        steps = steps + 1;
       }
-      
+
       move_rel32(0, 0);
       move_rel32(1, 0);
       // Turn_const_speed(0, 0);
@@ -468,13 +468,48 @@ void door(void) {
         else Serial.println("force value not provided!");
         break;
 
+      case 'c':
+        if (c == 0) {
+          m_distance=38;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+
+      case 'n':
+        if (c == 0) {
+          m_distance = 40;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+
+      case 'l':
+        if (c == 0) {
+          m_distance = 48;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+
+
+
+      case '0':
+        if (c == 0) {
+          force = sensor_i + 160 + 80;
+          paso = -1;
+          
+          t = 20;
+          Serial.println("avance mínimo del indentador");
+          c = 7;
+        }
+        else Serial.println("indenting in curse or not started!");
+        break;
+
       case '1':
         if (c == 0) {
-          force = sensor_i + 160+80;
-          paso=-2;
-          m_distance = 40;
-          t=20;     
-          Serial.println("1Kg choosen");
+          force = sensor_i + 160 + 80;
+          paso = -2;
+          
+          t = 20;
+          Serial.println("avance del indentador x 2");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
@@ -482,11 +517,11 @@ void door(void) {
 
       case '2':
         if (c == 0) {
-          force = sensor_i + 320+80;
-          paso=-10;
-          m_distance = 40;
-          t=20;
-          Serial.println("2Kg choosen");
+          force = sensor_i + 320 + 80;
+          paso = -10;
+          
+          t = 20;
+          Serial.println("avance del indentador x 10");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
@@ -494,66 +529,66 @@ void door(void) {
 
       case '3':
         if (c == 0) {
-          force = sensor_i + 480+80;
-          paso=-18;
-          m_distance = 40;
-          t=20;
-          Serial.println("3Kg choosen");
+          force = sensor_i + 480 + 80;
+          paso = -20;
+          
+          t = 20;
+          Serial.println("avance del indentador x 20");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
       case '4':
         if (c == 0) {
-          force = sensor_i + 640+80;
-          paso=-26;
-          m_distance = 40;
-          t=20;
-          Serial.println("4Kg choosen");
+          force = sensor_i + 640 + 80;
+          paso = -25;
+          
+          t = 20;
+          Serial.println("avance del indentador x 25");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
       case '5':
         if (c == 0) {
-          force = sensor_i + 800+80;
-          paso=-34;
-          m_distance = 40;
-          t=20;
-          Serial.println("5Kg choosen");
+          force = sensor_i + 800 + 80;
+          paso = -35;
+          
+          t = 20;
+          Serial.println("avance del indentador x 35");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
       case '6':
         if (c == 0) {
-          force = sensor_i + 960+80;
-          paso=-42;
-          m_distance = 40;
-          t=20;
-          Serial.println("6Kg choosen");
+          force = sensor_i + 960 + 80;
+          paso = -40;
+          
+          t = 20;
+          Serial.println("avance del indentador x 40");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
       case '7':
         if (c == 0) {
-          force = sensor_i + 1120+80;
-          paso=-50;
-          m_distance = 40;
-          t=20;
-          Serial.println("7Kg choosen");
+          force = sensor_i + 1120 + 80;
+          paso = -50;
+          
+          t = 20;
+          Serial.println("avance del indentador x 50");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
         break;
       case '8':
         if (c == 0) {
-          force = sensor_i + 1280+80;
-          paso=-58;
-          m_distance = 40;
-          t=20;
-          Serial.println("8Kg choosen");
+          force = sensor_i + 1280 + 80;
+          paso = -55;
+          
+          t = 20;
+          Serial.println("avance del indentador x 55");
           c = 7;
         }
         else Serial.println("indenting in curse or not started!");
