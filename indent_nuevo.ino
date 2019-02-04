@@ -6,6 +6,7 @@
 
   Distributed By: Manuel Alejandro Arroyave Montoya
                   www.manuelarroyave.com
+                  https://github.com/matheos/rockwell
 */
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
@@ -49,14 +50,19 @@ unsigned char Read_Package_Buffer[8], Read_Num, Read_Package_Length, Global_Func
 unsigned char MotorPosition32Ready_Flag, MotorTorqueCurrentReady_Flag, MainGainRead_Flag;
 unsigned char Driver_MainGain, Driver_SpeedGain, Driver_IntGain, Driver_TrqCons, Driver_HighSpeed, Driver_HighAccel, Driver_ReadID, Driver_Status, Driver_Config, Driver_OnRange;
 long Motor_Pos32, MotorTorqueCurrent;
+int16_t inChar = 0;
+int16_t incomingByte = 0;
+int16_t force = 0;
+int16_t m_distance = 10;
+int16_t paso = 0;
+int16_t t = 0;
 int16_t sensor, c, i, sensor_i;
 int16_t results;
-float multiplier = 0.0078125F;
 int16_t reading;
-String inputString = "";         // a string to hold incoming data
+int32_t steps = 0;
+int32_t finish;
 boolean stringComplete = false;  // whether the string is complete
-int inChar = 0;
-int incomingByte = 0;
+String inputString = "";         // a string to hold incoming data
 
 //  Funciones
 void move_rel32(char ID, long pos);
@@ -73,12 +79,8 @@ void Make_CRC_Send(unsigned char Plength, unsigned char B[8]);
 void door(void);
 /**/
 boolean newData = false;
-int force = 0;
-int m_distance = 10;
-int paso = 0;
-int t = 0;
-int32_t steps = 0;
-int32_t finish;
+
+
 
 void setup()
 {
@@ -434,14 +436,18 @@ void printHelp(void) {
   Serial.println("--- Command list: ---");
   Serial.println("? -> Print this HELP");
   Serial.println("s -> start loop");
-  Serial.println("1 -> one   Kgm selection");
-  Serial.println("2 -> two   Kgm selection");
-  Serial.println("3 -> three Kgm selection");
-  Serial.println("4 -> four  Kgm selection");
-  Serial.println("5 -> five  Kgm selection");
-  Serial.println("6 -> six   Kgm selection");
-  Serial.println("7 -> seven Kgm selection");
-  Serial.println("8 -> eight Kgm selection");
+  Serial.println("c -> indentación corta. 8mm");
+  Serial.println("n -> indentación normal. 10mm");
+  Serial.println("l -> indentación larga. 12mm");
+  Serial.println("0 -> avance mínimo de indentador");
+  Serial.println("1 -> indentador x 2");
+  Serial.println("2 -> indentador x 10");
+  Serial.println("3 -> indentador x 20");
+  Serial.println("4 -> indentador x 25");
+  Serial.println("5 -> indentador x 35");
+  Serial.println("6 -> indentador x 40");
+  Serial.println("7 -> indentador x 50");
+  Serial.println("8 -> indentador x 55");
 
 }
 
