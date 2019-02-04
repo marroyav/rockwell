@@ -50,15 +50,16 @@ unsigned char Read_Package_Buffer[8], Read_Num, Read_Package_Length, Global_Func
 unsigned char MotorPosition32Ready_Flag, MotorTorqueCurrentReady_Flag, MainGainRead_Flag;
 unsigned char Driver_MainGain, Driver_SpeedGain, Driver_IntGain, Driver_TrqCons, Driver_HighSpeed, Driver_HighAccel, Driver_ReadID, Driver_Status, Driver_Config, Driver_OnRange;
 long Motor_Pos32, MotorTorqueCurrent;
-int16_t inChar = 0;
-int16_t incomingByte = 0;
-int16_t force = 0;
-int16_t m_distance = 10;
-int16_t paso = 0;
-int16_t t = 0;
-int16_t sensor, c, i, sensor_i;
-int16_t results;
-int16_t reading;
+int inChar = 0;
+int incomingByte = 0;
+int32_t force = 0;
+int m_distance = 40;
+int32_t distance = 163480;
+int paso = 0;
+int t = 0;
+int32_t sensor, c, i, sensor_i;
+int32_t results;
+int32_t reading;
 int32_t steps = 0;
 int32_t finish;
 boolean stringComplete = false;  // whether the string is complete
@@ -145,7 +146,7 @@ void loop()
       break;
     case 4:
       Serial.println("Indenting");
-      finish = int (163480 / m_distance);
+      finish = (distance / m_distance);
 
       while ((sensor < 1400) && (steps < finish)) {
         reading = ads.readADC_Differential_0_1();
@@ -476,21 +477,24 @@ void door(void) {
 
       case 'c':
         if (c == 0) {
-          m_distance=38;
+          distance=130784;
+          Serial.println("short indent 8 mm");
         }
         else Serial.println("indenting in curse or not started!");
         break;
 
       case 'n':
         if (c == 0) {
-          m_distance = 40;
+          distance = 163480;
+          Serial.println("normal indent 10 mm");
         }
         else Serial.println("indenting in curse or not started!");
         break;
 
       case 'l':
         if (c == 0) {
-          m_distance = 48;
+          distance = 196176;
+          Serial.println("large indent 12 mm");
         }
         else Serial.println("indenting in curse or not started!");
         break;
