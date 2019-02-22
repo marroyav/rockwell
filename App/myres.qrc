@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/focus.png</file>
+        <file>images/hover.png</file>
+        <file>images/normal.png</file>
+        <file>images/pressed.png</file>
+        <file>images/disabled.png</file>
+        <file>images/check_clicked.png</file>
+        <file>images/check_hover.png</file>
+        <file>images/check_hover_selected.png</file>
+        <file>images/check_normal.png</file>
+        <file>images/groupbox.png</file>
+        <file>candy.qss</file>
+        <file>images/check-disabled.png</file>
+        <file>images/checked-disabled.png</file>
+        <file>images/button-hover2.png</file>
+        <file>images/checked-hover.png</file>
+        <file>images/down-arrow.png</file>
+        <file>images/button-gray.png</file>
+        <file>images/scroll-handle.png</file>
+        <file>images/zoom-in.png</file>
+        <file>images/zoom-out.png</file>
+        <file>images/graph.png</file>
+        <file>images/grid.png</file>
+        <file>images/fullscreen.png</file>
+        <file>images/maximize.png</file>
+        <file>images/minimize.png</file>
+        <file>images/plotgroup.png</file>
+        <file>images/style.png</file>
+        <file>colorChooser.css</file>
+        <file>images/image-x-generic.png</file>
+    </qresource>
+</RCC>

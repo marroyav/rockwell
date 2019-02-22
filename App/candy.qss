@@ -1,0 +1,192 @@
+QWidget
+{
+    font-family : Lucida Grande;
+    background-color:#858685;
+}
+
+QLineEdit
+ {
+    background-color:white;
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding-right: 15px;
+    selection-background-color: #97bafa;
+    selection-color: white;
+    padding: 0px 8px;
+}
+QListView
+{
+   color : white;
+   background-color:#4b4b4b;
+   border: 1px solid #97bafa;
+   border-radius: 8px;
+   selection-background-color: #97bafa;
+   selection-color: white;
+   padding: 2px 2px;
+}
+QLineEdit:hover
+{
+    border:2px solid #97bafa;
+}
+QLineEdit:focus
+{
+    border:2px solid black;
+}
+QLineEdit::disabled
+{
+    border:1px solid gray;
+    background-color:rgb(225, 216, 202);
+}
+QComboBox,
+QPushButton
+{
+    color : black;
+    border-image :url(:/images/normal.png) 9;
+    border-width: 9px;
+    padding: -10px 0px;
+    min-height: 25px;
+    min-width: 50px;
+    background-color :transparent;
+}
+QGroupBox
+{
+    color : black;
+    border-image :url(:/images/groupbox.png) 30;
+    border-width: 10px;
+}
+QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    background-color :transparent;
+}
+
+QComboBox:disabled,
+QPushButton:disabled
+{
+    border-image: url(:/images/disabled.png) 9;
+}
+QComboBox::drop-down
+{
+ height:20;
+ left:5;
+ top:-8px;
+ image: url(:/images/down-arrow.png);
+ background-color:transparent;
+}
+QComboBox::drop-down:on
+{
+ top:-5px;
+}
+QComboBox:focus,
+QPushButton:focus
+{
+    border-image: url(:/images/hover.png) 9;
+}
+QComboBox:!focus:hover,
+QPushButton:!focus:hover
+{
+    border-image: url(:/images/focus.png) 9;
+}
+QPushButton:pressed,
+QComboBox:on
+{
+    border-image: url(:/images/pressed.png) 9;
+    padding-top : -14;
+    padding-bottom : -16
+}
+QCheckBox
+{
+ background-color :transparent;
+ color :black;
+}
+QCheckBox::indicator
+{
+    color:white;
+    width : 20;
+    height:20;
+    background-image : url(:/images/check_normal.png);
+}
+
+QCheckBox::indicator:hover,
+QCheckBox::indicator:focus
+{
+
+    background-image : url(:/images/check_hover.png);
+}
+QCheckBox::indicator:checked:!hover
+{
+    background-image : url(:/images/check_clicked.png);
+}
+QCheckBox::indicator:checked:disabled
+{
+    background-image : url(:/images/checked-disabled.png);
+}
+QCheckBox::indicator:!checked:disabled
+{
+    background-image : url(:/images/check-disabled.png);
+}
+QCheckBox::indicator:checked:hover,
+QCheckBox::indicator:checked:focus
+{
+    background-image : url(:/images/checked-hover.png);
+}
+QPlainTextEdit
+{
+font-family:Liberation Mono;
+font : 8pt;
+border-radius:5px;
+min-width:500;
+background-color:white;
+selection-background-color: #97bafa;
+selection-color: white;
+}
+QPlainTextEdit:!editable:focus
+{
+border:2px solid black;
+}
+QPlainTextEdit:hover
+{
+    border:2px solid #97bafa;
+}
+QLabel
+{
+     background-color :transparent;
+}
+
+QScrollBar
+{
+      background-color:#4b4b4b;
+      border: 1px solid black;
+      width: 15px;
+      margin: 22px 0 22px 0;
+      border-radius:5;
+  }
+  QScrollBar::handle
+  {
+  min-height:20;
+  border: 1px solid gray;
+  background-color:#97bafa;
+  border-radius:5px;
+  }
+  QScrollBar::add-line {
+      border: 1px solid black;
+      background: #bebebe;
+      height: 15px;
+      border-radius:5;
+      subcontrol-position: bottom;
+      subcontrol-origin: margin;
+  }
+
+  QScrollBar::sub-line {
+      border: 1px solid black;
+      background: #bebebe;
+      height: 15px;
+      border-radius:5;
+      subcontrol-position: top;
+      subcontrol-origin: margin;
+  }
+
+  QScrollBar::add-page, QScrollBar::sub-page {
+      background: none;
+  }
